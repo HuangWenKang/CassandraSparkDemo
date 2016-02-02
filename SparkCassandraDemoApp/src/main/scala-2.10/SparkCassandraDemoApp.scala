@@ -20,14 +20,27 @@ object SimpleApp {
     val tableWriter = new CassandraTableWriter()
 
     tableWriter.initialise()
-    tableReader.readTestTableValues()
+    //tableReader.readTestTableValues()
     tableWriter.writeTestTableValues()
-    tableReader.readTestTableValues()
+    //tableReader.readTestTableValues()
 
-    tableReader.foreachTestTableValues()
-    tableReader.getColumnAttributes()
-    tableReader.getSets()
-    tableReader.getUDT()
+    //tableReader.foreachTestTableValues()
+    //tableReader.getColumnAttributes()
+    //tableReader.getSets()
+    //tableReader.getUDT()
+
+    //tableReader.foreachSelectedTableColumnValues()
+    //tableReader.foreachFilteredTableColumnValues()
+    //tableReader.foreachTableRowCount()
+    //tableReader.foreachTableRowAsTuples()
+    //tableReader.foreachTableRowAsCaseClasses()
+    //tableReader.foreachTableRowAsCaseClassesUsingColumnAliases()
+
+
+
+    tableReader.foreachTableRowAsTuples()
+    tableWriter.saveCollectionOfTuples()
+    tableReader.foreachTableRowAsTuples()
 
 
     println("====== DONE ======")

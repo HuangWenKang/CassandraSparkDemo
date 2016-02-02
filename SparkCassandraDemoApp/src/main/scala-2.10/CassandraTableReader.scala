@@ -3,7 +3,7 @@ import com.datastax.spark.connector._
 
 class CassandraTableReader()(implicit val sc : SparkContext) {
 
-  //Make sure you have done the steps in this post 1st
+  //See this post for more details
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md
   def readTestTableValues(): Unit = {
     println(s"In method : readTestTableValues")
@@ -17,7 +17,7 @@ class CassandraTableReader()(implicit val sc : SparkContext) {
   }
 
 
-  //Make sure you have done the steps in this post 1st
+  //See this post for more details
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md
   def foreachTestTableValues(): Unit = {
     println(s"In method : foreachTestTableValues")
@@ -26,7 +26,7 @@ class CassandraTableReader()(implicit val sc : SparkContext) {
   }
 
 
-  //Make sure you have done the steps in this post 1st
+  //See this post for more details
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md
   def getColumnAttributes(): Unit = {
     println(s"In method : getColumnValue")
@@ -43,34 +43,116 @@ class CassandraTableReader()(implicit val sc : SparkContext) {
 
   }
 
-  //Make sure you have done the steps in this post 1st
+  //See this post for more details
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md
   def getSets(): Unit = {
     println(s"In method : getSets")
     val rdd = sc.cassandraTable("test", "users")
     val row = rdd.first()
-    printIt("getSets", "List[String]", row.get[List[String]]("emails"))
-    printIt("getSets", "IndexedSeq[String]", row.get[IndexedSeq[String]]("emails"))
-    printIt("getSets", "Seq[String]", row.get[Seq[String]]("emails"))
-    printIt("getSets", "Set[String]", row.get[Set[String]]("emails"))
+    PrintHelper.printIt("getSets", "List[String]", row.get[List[String]]("emails"))
+    PrintHelper.printIt("getSets", "IndexedSeq[String]", row.get[IndexedSeq[String]]("emails"))
+    PrintHelper.printIt("getSets", "Seq[String]", row.get[Seq[String]]("emails"))
+    PrintHelper.printIt("getSets", "Set[String]", row.get[Set[String]]("emails"))
   }
 
 
-  //Make sure you have done the steps in this post 1st
+  //See this post for more details
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md
   def getUDT(): Unit = {
     println(s"In method : getUDT")
     val rdd = sc.cassandraTable("test", "companies")
     val row = rdd.first()
     val address: UDTValue = row.getUDTValue("address")
-    printIt("getUDT", "city", address.getString("city"))
-    printIt("getUDT", "street", address.getString("street"))
-    printIt("getUDT", "number", address.getString("number"))
+    PrintHelper.printIt("getUDT", "city", address.getString("city"))
+    PrintHelper.printIt("getUDT", "street", address.getString("street"))
+    PrintHelper.printIt("getUDT", "number", address.getString("number"))
+  }
+
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/3_selection.md
+  def foreachSelectedTableColumnValues(): Unit = {
+    println(s"In method : foreachSelectedTableColumnValues")
+
+    val filteredColumnsRdd = sc.cassandraTable("test", "users")
+      .select("username")
+
+    filteredColumnsRdd.foreach(println)
+
+    val row = filteredColumnsRdd.first()
+    PrintHelper.printIt("foreachSelectedTableColumnValues", "username", row.getString("username"))
   }
 
 
-  def printIt(method : String, name : String, data : AnyRef): Unit = {
-    println(s"============ $method : $name $data")
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/3_selection.md
+  def foreachFilteredTableColumnValues(): Unit = {
+    println(s"In method : foreachFilteredTableColumnValues")
+
+    val filteredColumnsRdd = sc.cassandraTable("test", "users")
+      .select("username")
+      .where("username = ?", "bill")
+
+    filteredColumnsRdd.foreach(println)
+
+    val row = filteredColumnsRdd.first()
+    PrintHelper.printIt("foreachFilteredTableColumnValues", "username", row.getString("username"))
   }
+
+
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/3_selection.md
+  def foreachTableRowCount(): Unit = {
+    println(s"In method : foreachTableRowCount")
+
+    val count = sc.cassandraTable("test", "users")
+      .select("username")
+      .cassandraCount()
+
+    PrintHelper.printIt("foreachTableRowCount", "all users count", count)
+  }
+
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/4_mapper.md
+  def foreachTableRowAsTuples(): Unit = {
+    println(s"In method : foreachTableRowAsTuples")
+
+    val rdd = sc.cassandraTable[(String, Int)]("test", "words")
+      .select("word", "count");
+    val items = rdd.take(rdd.count().asInstanceOf[Int])
+    items.foreach(tuple => PrintHelper.printIt("foreachTableRowAsTuples",
+      "tuple(String, Int)", tuple))
+
+    val rdd2 = sc.cassandraTable[(Int, String)]("test", "words")
+      .select("count", "word")
+    val items2 = rdd2.take(rdd2.count().asInstanceOf[Int])
+    items2.foreach(tuple => PrintHelper.printIt("foreachTableRowAsTuples",
+      "tuple(Int, String)", tuple))
+  }
+
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/4_mapper.md
+  def foreachTableRowAsCaseClasses(): Unit = {
+    println(s"In method : foreachTableRowAsCaseClasses")
+
+    val items = sc.cassandraTable[WordCount]("test", "words")
+      .select("word", "count").take(3)
+
+    items.foreach(wc => PrintHelper.printIt("foreachTableRowAsCaseClasses",
+      "WordCount(word : String, count : Int)", wc))
+  }
+
+
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/4_mapper.md
+  def foreachTableRowAsCaseClassesUsingColumnAliases(): Unit = {
+    println(s"In method : foreachTableRowAsCaseClassesUsingColumnAliases")
+
+    val items = sc.cassandraTable[WordCount]("test", "kv")
+      .select("key" as "word", "value" as "count").take(1)
+
+    items.foreach(wc => PrintHelper.printIt("foreachTableRowAsCaseClassesUsingColumnAliases",
+      "WordCount(word : String, count : Int)", wc))
+  }
+
 
 }
