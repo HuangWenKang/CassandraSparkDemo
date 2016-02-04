@@ -21,7 +21,7 @@ object SimpleApp {
 
     tableWriter.initialise()
     //tableReader.readTestTableValues()
-    tableWriter.writeTestTableValues()
+    //tableWriter.writeTestTableValues()
     //tableReader.readTestTableValues()
 
     //tableReader.foreachTestTableValues()
@@ -38,10 +38,13 @@ object SimpleApp {
 
 
 
-    tableReader.foreachTableRowAsTuples()
-    tableWriter.saveCollectionOfTuples()
-    tableReader.foreachTableRowAsTuples()
+    //tableReader.foreachTableRowAsTuples()
+    //tableWriter.saveCollectionOfTuples()
+    //tableReader.foreachTableRowAsTuples()
 
+
+    //tableWriter.saveCollectionOfCaseClasses()
+    tableWriter.saveUDT()
 
     println("====== DONE ======")
 

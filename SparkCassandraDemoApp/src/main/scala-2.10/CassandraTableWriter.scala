@@ -67,6 +67,31 @@ class CassandraTableWriter()(implicit val sc : SparkContext) {
   }
 
 
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/5_saving.md
+  def saveCollectionOfCaseClasses(): Unit = {
+    println(s"In method : saveCollectionOfCaseClasses")
+
+    val collection = sc.parallelize(Seq(WordCount("shark", 50), WordCount("panther", 60)))
+    collection.saveToCassandra("test", "words", SomeColumns("word", "count"))
+
+  }
+
+
+  //See this post for more details
+  //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/5_saving.md
+  def saveUDT(): Unit = {
+    println(s"In method : saveUDT")
+
+    val address = Address(city = "Oakland", street = "Broadway", number = 90210 )
+    val col = Seq(("Oakland cycles", address))
+    sc.parallelize(col).saveToCassandra("test", "companies", SomeColumns("name", "address"))
+
+  }
+
+
+
+
 
 }
 
