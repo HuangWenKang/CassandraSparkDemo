@@ -20,30 +20,22 @@ object SimpleApp {
     val tableWriter = new CassandraTableWriter()
 
     tableWriter.initialise()
-    //tableReader.readTestTableValues()
-    //tableWriter.writeTestTableValues()
-    //tableReader.readTestTableValues()
-
-    //tableReader.foreachTestTableValues()
-    //tableReader.getColumnAttributes()
-    //tableReader.getSets()
-    //tableReader.getUDT()
-
-    //tableReader.foreachSelectedTableColumnValues()
-    //tableReader.foreachFilteredTableColumnValues()
-    //tableReader.foreachTableRowCount()
-    //tableReader.foreachTableRowAsTuples()
-    //tableReader.foreachTableRowAsCaseClasses()
-    //tableReader.foreachTableRowAsCaseClassesUsingColumnAliases()
-
-
-
-    //tableReader.foreachTableRowAsTuples()
-    //tableWriter.saveCollectionOfTuples()
-    //tableReader.foreachTableRowAsTuples()
-
-
-    //tableWriter.saveCollectionOfCaseClasses()
+    tableReader.readTestTableValues()
+    tableWriter.writeTestTableValues()
+    tableReader.readTestTableValues()
+    tableReader.foreachTestTableValues()
+    tableReader.getColumnAttributes()
+    tableReader.getSets()
+    tableReader.getUDT()
+    tableReader.foreachSelectedTableColumnValues()
+    tableReader.foreachFilteredTableColumnValues()
+    tableReader.foreachTableRowAsTuples()
+    tableReader.foreachTableRowAsCaseClasses()
+    tableReader.foreachTableRowAsCaseClassesUsingColumnAliases()
+    tableReader.foreachTableRowAsTuples()
+    tableWriter.saveCollectionOfTuples()
+    tableReader.foreachTableRowAsTuples()
+    tableWriter.saveCollectionOfCaseClasses()
     tableWriter.saveUDT()
 
     println("====== DONE ======")

@@ -101,7 +101,7 @@ class CassandraTableReader()(implicit val sc : SparkContext) {
 
   //See this post for more details
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/3_selection.md
-  def foreachTableRowCount(): Unit = {
+  def tableRowCount(): Unit = {
     println(s"In method : foreachTableRowCount")
 
     val count = sc.cassandraTable("test", "users")
@@ -130,6 +130,7 @@ class CassandraTableReader()(implicit val sc : SparkContext) {
   }
 
   //See this post for more details
+
   //https://github.com/datastax/spark-cassandra-connector/blob/master/doc/4_mapper.md
   def foreachTableRowAsCaseClasses(): Unit = {
     println(s"In method : foreachTableRowAsCaseClasses")
